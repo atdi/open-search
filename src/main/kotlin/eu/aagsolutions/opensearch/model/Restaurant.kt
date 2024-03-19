@@ -18,8 +18,8 @@ data class Restaurant(@Id
                       val country: String,
                       @Field(type = FieldType.Text, name = "address")
                       val address: String,
-                      @Field(type = FieldType.Text, name = "specific")
+                      @Field(type = FieldType.Keyword, name = "specific")
                       val specific: String,
-                      @Field(name = "location")
+                      @Field(name = "location", type = FieldType.Auto)
                       val location: GeoPoint
 )
