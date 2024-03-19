@@ -1,3 +1,3 @@
 ## Intro
 
-This is just playground to evaluate opensearch integration with spring boot.
+This is just a playground to evaluate opensearch integration with spring boot.
