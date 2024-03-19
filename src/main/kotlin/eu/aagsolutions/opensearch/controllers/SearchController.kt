@@ -1,6 +1,6 @@
 package eu.aagsolutions.opensearch.controllers
 
-import eu.aagsolutions.opensearch.payload.GeoSearch
+import eu.aagsolutions.opensearch.payload.RestaurantSearchRequest
 import eu.aagsolutions.opensearch.responses.SearchResult
 import eu.aagsolutions.opensearch.services.RestaurantService
 import org.springframework.http.ResponseEntity
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class SearchController(private val restaurantService: RestaurantService) {
 
     @PostMapping
-    fun searchByLocation(@RequestBody geoSearch: GeoSearch): ResponseEntity<SearchResult> {
-        return ResponseEntity.ok(restaurantService.findRadiusSearch(geoSearch.geoPoint, geoSearch.distance))
+    fun searchByLocation(@RequestBody restaurantSearch: RestaurantSearchRequest): ResponseEntity<SearchResult> {
+        return ResponseEntity.ok(restaurantService.findRadiusSearch(restaurantSearch))
     }
 }

@@ -1,7 +1,6 @@
 package eu.aagsolutions.opensearch.controllers
 
 import eu.aagsolutions.opensearch.model.Restaurant
-import eu.aagsolutions.opensearch.payload.GeoSearch
 import eu.aagsolutions.opensearch.services.RestaurantService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

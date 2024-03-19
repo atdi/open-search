@@ -1,6 +1,7 @@
 package eu.aagsolutions.opensearch.repositories
 
 import eu.aagsolutions.opensearch.model.Restaurant
+import eu.aagsolutions.opensearch.payload.RestaurantSearchRequest
 import eu.aagsolutions.opensearch.responses.SearchFacet
 import eu.aagsolutions.opensearch.responses.SearchResult
 import org.opensearch.action.search.SearchRequest
@@ -14,16 +15,21 @@ import org.opensearch.search.aggregations.bucket.terms.ParsedStringTerms
 import org.opensearch.search.builder.SearchSourceBuilder
 import java.util.*
 
+
 class GeoRepositoryImpl(private val openSearchClient: RestHighLevelClient) : GeoRepository {
-    override fun searchWithin(geoPoint: GeoPoint?, distance: Double?, unit: String?): SearchResult {
+    override fun searchWithin(restaurantSearch: RestaurantSearchRequest, unit: String?): SearchResult {
         val searchRequest = SearchRequest("restaurants")
+        val boolQuery = QueryBuilders.boolQuery()
+        if (restaurantSearch.specific != null) {
+            boolQuery.filter(QueryBuilders.termQuery("specific", restaurantSearch.specific))
+        }
+        boolQuery.must(QueryBuilders.geoDistanceQuery("location")
+            .point(restaurantSearch.geoPoint)
+            .distance("${restaurantSearch.distance}${unit}"));
         val searchSourceBuilder = SearchSourceBuilder()
             .query(
-                QueryBuilders.geoDistanceQuery("location")
-                    .point(geoPoint)
-                    .distance("${distance}${unit}")
+                boolQuery
             ).aggregation(AggregationBuilders.terms("specific").field("specific"))
-
 
         searchRequest.source(searchSourceBuilder)
 
