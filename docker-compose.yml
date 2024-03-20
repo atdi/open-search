@@ -22,10 +22,10 @@ services:
     volumes:
       - opensearch-data1:/usr/share/opensearch/data # Creates volume called opensearch-data1 and mounts it to the container
     ports:
-      - 9200:9200 # REST API
-      - 9600:9600 # Performance Analyzer
+      - "9200:9200" # REST API
+      - "9600:9600" # Performance Analyzer
     networks:
-      - opensearch-net # All of the containers will join the same Docker bridge network
+      - opensearch-net # All the containers will join the same Docker bridge network
   opensearch-node2:
     image: opensearchproject/opensearch:latest
     container_name: opensearch-node2
@@ -48,12 +48,12 @@ services:
     volumes:
       - opensearch-data2:/usr/share/opensearch/data # Creates volume called opensearch-data2 and mounts it to the container
     networks:
-      - opensearch-net # All of the containers will join the same Docker bridge network
+      - opensearch-net # All the containers will join the same Docker bridge network
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:latest
     container_name: opensearch-dashboards
     ports:
-      - 5601:5601 # Map host port 5601 to container port 5601
+      - "5601:5601" # Map host port 5601 to container port 5601
     expose:
       - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
     environment:
@@ -62,9 +62,33 @@ services:
     networks:
       - opensearch-net
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME:
+    networks:
+      - kafka-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_HOST://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+    networks:
+      - kafka-net
+
 volumes:
   opensearch-data1:
   opensearch-data2:
 
 networks:
   opensearch-net:
+  kafka-net:

@@ -1,0 +1,94 @@
+asyncapi: 3.0.0
+info:
+  title: OpenSearch
+  version: 1.0.0
+  description: "This service is in charge of indexing documents to opensearch"
+defaultContentType: "application/json"
+servers:
+  kafka:
+    host: "localhost:9092"
+    protocol: "kafka"
+channels:
+  INDEX_TOPIC:
+    messages:
+      Restaurant:
+        $ref: "#/components/messages/Restaurant"
+operations:
+  INDEX_TOPIC_receive_consume:
+    action: "receive"
+    channel:
+      $ref: "#/channels/INDEX_TOPIC"
+    title: "INDEX_TOPIC_receive"
+    description: "Index restaurant data"
+    bindings:
+      kafka:
+        bindingVersion: 0.4.0
+    messages:
+      - $ref: "#/channels/INDEX_TOPIC/messages/Restaurant"
+  INDEX_TOPIC_send_publish:
+    action: send
+    channel:
+      $ref: "#/channels/INDEX_TOPIC"
+    title: "INDEX_TOPIC_send"
+    description: "Topic for receiving indexing messages"
+    bindings:
+      kafka:
+        bindingVersion: 0.4.0
+    messages:
+      - $ref: "#/channels/INDEX_TOPIC/messages/Restaurant"
+components:
+  messages:
+    Restaurant:
+      payload:
+        type: object
+        required:
+          - id
+          - name
+          - city
+          - address
+          - country
+          - specific
+          - location
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: Id
+          name:
+            type: string
+            description: Restaurant name
+          city:
+            type: string
+            description: City
+          address:
+            type: string
+            description: Street and number
+          country:
+            type: string
+            description: Country
+          specific:
+            type: string
+            description: Restaurant specific
+            enum:
+              - italian
+              - indian
+              - french
+              - chinese
+              - japanese
+              - vietnamese
+          location:
+            type: object
+            $ref: "#/components/schemas/GeoPoint"
+  schemas:
+    GeoPoint:
+      type: object
+      required:
+        - lat
+        - lon
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
