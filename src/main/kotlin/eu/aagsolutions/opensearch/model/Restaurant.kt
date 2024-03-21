@@ -14,32 +14,32 @@ import java.util.*
 @Schema(description = "Restaurant indexing model")
 @Document(indexName = "restaurants")
 data class Restaurant(
-    @Schema(type = "string", format = "uuid", example = "ff59014a-a94f-4f33-ae75-2f07fe24e206", requiredMode = REQUIRED)
+    @Schema(description = "Document id", format = "uuid", example = "ff59014a-a94f-4f33-ae75-2f07fe24e206", requiredMode = REQUIRED)
     @NotBlank
     @Id
     val id: UUID,
-    @Schema(type = "string", example = "Chop suy", requiredMode = REQUIRED)
+    @Schema(description = "Restaurant name", example = "Chop suy", requiredMode = REQUIRED)
     @NotBlank
     @Field(type = FieldType.Text, name = "name")
     val name: String,
-    @Schema(type = "string", example = "London", requiredMode = REQUIRED)
+    @Schema(description = "Restaurant City", example = "London", requiredMode = REQUIRED)
     @NotBlank
     @Field(type = FieldType.Text, name = "city")
     val city: String,
-    @Schema(type = "string", example = "England", requiredMode = REQUIRED)
+    @Schema(description = "Restaurant Country", example = "England", requiredMode = REQUIRED)
     @NotBlank
     @Field(type = FieldType.Text, name = "country")
     val country: String,
-    @Schema(type = "string", example = "Bond Street, 2", requiredMode = REQUIRED)
+    @Schema(description = "Restaurant Address", example = "Bond Street, 2", requiredMode = REQUIRED)
     @NotBlank
     @Field(type = FieldType.Text, name = "address")
     val address: String,
-    @Schema(allowableValues=["italian", "indian", "french", "chinese", "japanese", "vietnamese"],
-        type = "string", example = "Chop suy", requiredMode = REQUIRED)
+    @Schema(description = "Restaurant Specific", allowableValues=["italian", "indian", "french", "chinese", "japanese", "vietnamese"],
+        example = "Chop suy", requiredMode = REQUIRED)
     @NotBlank
     @Field(type = FieldType.Keyword, name = "specific")
     val specific: String,
-    @Schema(type = "object", ref = "GeoPoint", requiredMode = REQUIRED)
+    @Schema(description = "Restaurant location", requiredMode = REQUIRED)
     @NotNull
     @Field(name = "location", type = FieldType.Auto)
     val location: GeoPoint
