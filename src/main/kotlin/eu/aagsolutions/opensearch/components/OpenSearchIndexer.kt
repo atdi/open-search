@@ -15,7 +15,8 @@ class OpenSearchIndexer(private val restaurantService: RestaurantService) {
     @AsyncListener(
         operation = AsyncOperation(
             channelName = "INDEX_TOPIC",
-            description = "Index restaurant data"
+            description = "Index restaurant data",
+            payloadType = Restaurant::class
         )
     )
     @KafkaAsyncOperationBinding
